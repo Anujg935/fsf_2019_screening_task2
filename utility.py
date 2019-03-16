@@ -1,7 +1,9 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import sys
@@ -31,6 +33,13 @@ class MainApp(QMainWindow,ui):
         self.Handel_Buttons()
         self.dark_orange_theme()
         self.tabWidget.tabBar().setVisible(False)
+
+    def addmpl(self, fig):
+        self.canvas = FigureCanvas(fig)
+        self.canvas.setParent(self.mpl_widget)
+        #self.addToolBar(NavigationToolbar(static_canvas,self))
+        self.toolbar = NavigationToolbar(self.canvas,self.mpl_tab, coordinates=True)
+        self.canvas.draw()
 
     def plot(self, axes):
         x = np.linspace(-10, 10)
@@ -182,8 +191,15 @@ class MainApp(QMainWindow,ui):
         self.setStyleSheet(style)
         
 def main():
+
+    fig1 = Figure(figsize=(5, 5))
+    ax1f1 = fig1.add_subplot(111)
+    x = [i for i in range(50)]
+    y = [i**2 for i in x ]
+    ax1f1.scatter(x,y)
     app = QApplication(sys.argv)
     window = MainApp()
+    window.addmpl(fig1)
     window.show()
     app.exec()
 
