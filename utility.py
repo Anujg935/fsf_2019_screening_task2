@@ -1,6 +1,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
+from scipy.interpolate import interp1d
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
@@ -14,7 +15,6 @@ import  random
 ui,_ = loadUiType('main.ui')
 
 
-
 class MainApp(QMainWindow,ui):
     
     def __init__(self):
@@ -22,8 +22,6 @@ class MainApp(QMainWindow,ui):
         self.col_count=8
         self.isSaved = False
         QMainWindow.__init__(self)
-
-
         self.setupUi(self)
         self.initial_Table()
         self.FileMenu()
@@ -33,22 +31,31 @@ class MainApp(QMainWindow,ui):
         self.Handel_Buttons()
         self.dark_orange_theme()
         self.tabWidget.tabBar().setVisible(False)
+        self.plot(type="scatter")
 
-    def addmpl(self, fig):
+
+    def plot(self,Xdata=None,Ydata=None,type="scatter",x_label="x_label",y_label="y_label"):
+        fig = Figure(figsize=(4, 4), dpi=100)
+        ax1f1 = fig.add_subplot(111)
+        if type == "scatter":
+            ax1f1.scatter(Xdata, Ydata)
+        elif type =="line":
+            ax1f1.plot(Xdata,Ydata)
+        else:
+            pass
+        ax1f1.set_xlabel(x_label)
+        ax1f1.set_ylabel(y_label)
+        ax1f1.set_title("Plot")
         self.canvas = FigureCanvas(fig)
         self.canvas.setParent(self.mpl_widget)
-        #self.addToolBar(NavigationToolbar(static_canvas,self))
         self.toolbar = NavigationToolbar(self.canvas,self.mpl_tab, coordinates=True)
         self.canvas.draw()
+        self.canvas.show()
 
-    def plot(self, axes):
-        x = np.linspace(-10, 10)
-        axes.plot(x, x ** 2)
-        axes.plot(x, x ** 3)
     def initial_Table(self):
-        self.tableWidget.setColumnCount(self.col_count)     
+        self.tableWidget.setColumnCount(self.col_count)
         self.tableWidget.setRowCount(self.row_count)
-        
+
     def Handel_Buttons(self):
         self.pushButton.clicked.connect(self.Show_Themes)
         self.pushButton_6.clicked.connect(self.Hiding_Themes)
@@ -59,14 +66,50 @@ class MainApp(QMainWindow,ui):
         self.pushButton_7.clicked.connect(self.Show_Home)
         self.pushButton_8.clicked.connect(self.Show_Plotting)
         self.pushButton_9.clicked.connect(self.file_save)
-
+        self.pushButton_10.clicked.connect(self.scatterPlot)
+        self.pushButton_11.clicked.connect(self.linePlot)
+        self.pushButton_12.clicked.connect(self.smoothCurve)
 
     def Show_Home(self):
         self.tabWidget.setCurrentIndex(0)
 
     def Show_Plotting(self):
         self.tabWidget.setCurrentIndex(1)
-        
+
+    def linePlot(self):
+        x_axis = self.comboBox_X.currentText()
+        y_axis = self.comboBox_Y.currentText()
+
+        if (x_axis == y_axis):
+            QMessageBox.about(self, 'Important', "X and Y axis can't be same to plot !!!!")
+        else:
+            xData = np.array(self.df[x_axis]).reshape(-1)
+            yData = np.array(self.df[y_axis]).reshape(-1)
+            self.plot(xData, yData,type="line",x_label=x_axis,y_label=y_axis)
+    def scatterPlot(self):
+        x_axis = self.comboBox_X.currentText()
+        y_axis = self.comboBox_Y.currentText()
+
+        if(x_axis == y_axis):
+            QMessageBox.about(self, 'Important', "X and Y axis can't be same to plot !!!!")
+        else:
+            xData = np.array(self.df[x_axis]).reshape(-1)
+            yData = np.array(self.df[y_axis]).reshape(-1)
+            self.plot(xData,yData,type="scatter",x_label=x_axis,y_label=y_axis)
+
+    def smoothCurve(self):
+        x_axis = self.comboBox_X.currentText()
+        y_axis = self.comboBox_Y.currentText()
+
+        if (x_axis == y_axis):
+            QMessageBox.about(self, 'Important', "X and Y axis can't be same to plot !!!!")
+        else:
+            xData = np.array(self.df[x_axis]).reshape(-1)
+            yData = np.array(self.df[y_axis]).reshape(-1)
+            xSmooth = np.linspace(xData.min(),xData.max(),300)
+            f = interp1d(xData, yData, kind='quadratic')
+            ySmooth=f(xSmooth)
+            self.plot(xSmooth, ySmooth, type="line",x_label=x_axis,y_label=y_axis)
     def FileMenu(self):
         #self.actionQuit.triggered.connect(qApp.quit)
         self.actionQuit.triggered.connect(self.closeEvent)
@@ -102,41 +145,34 @@ class MainApp(QMainWindow,ui):
         if fileName:
             self.loadCsv(fileName)
 
+    def fillComboBox(self):
+        col = []
+        for i in range(self.tableWidget.columnCount()):
+            col.append(self.tableWidget.horizontalHeaderItem(i).text())
 
+        self.comboBox_X.insertItems(0,col)
+        self.comboBox_Y.insertItems(0,col)
     def loadCsv(self,fileName):
         if fileName:
-            df = pd.read_csv(fileName)
+            self.df = pd.read_csv(fileName)
             #print()
-            self.row_count = len(df.index)
-            self.col_count = len(df.columns)
-            self.tableWidget.setHorizontalHeaderLabels(list(df))
-            self.tableWidget.setColumnCount(len(df.columns))     
-            self.tableWidget.setRowCount(len(df.index))
-            for i in range(len(df.index)):
-                for j in range(len(df.columns)):
-                    self.tableWidget.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
-                    
+            self.row_count = len(self.df.index)
+            self.col_count = len(self.df.columns)
+            self.tableWidget.setHorizontalHeaderLabels(list(self.df))
+            self.tableWidget.setColumnCount(self.col_count)
+            self.tableWidget.setRowCount(self.row_count)
+            for i in range(self.row_count):
+                for j in range(self.col_count):
+                    self.tableWidget.setItem(i, j, QTableWidgetItem(str(self.df.iat[i, j])))
+
             self.tableWidget.resizeColumnsToContents()
             self.tableWidget.resizeRowsToContents()
+            self.fillComboBox()
             
     def file_save(self):
         name,_ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.csv *.tsv *.txt)")
         if name:
-            data = np.zeros((self.tableWidget.rowCount(),self.tableWidget.columnCount()))
-            for i in range(self.tableWidget.rowCount()):
-                for j in range(self.tableWidget.columnCount()):
-                    print(self.tableWidget.item(i, j).text())
-                    data[i][j] = self.tableWidget.item(i, j).text()
-            
-            #col = []
-            #for i in range(self.tableWidget.columnCount):
-                #col[i] = self.tableWidget.horizontalHeaderItem(str(i)).text()
-            #print(col)
-
-            col = self.tableWidget.horizontalHeaderLabels()
-            print(col)
-            df =pd.DataFrame(data)
-            df.to_csv(name,sep=',',index=False)
+            self.df.to_csv(name,sep=',',index=False)
             self.isSaved = True
     
     def closeEvent(self, event):
@@ -192,14 +228,8 @@ class MainApp(QMainWindow,ui):
         
 def main():
 
-    fig1 = Figure(figsize=(5, 5))
-    ax1f1 = fig1.add_subplot(111)
-    x = [i for i in range(50)]
-    y = [i**2 for i in x ]
-    ax1f1.scatter(x,y)
     app = QApplication(sys.argv)
     window = MainApp()
-    window.addmpl(fig1)
     window.show()
     app.exec()
 
