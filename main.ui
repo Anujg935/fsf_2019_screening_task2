@@ -62,7 +62,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -103,8 +103,8 @@
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>421</width>
-        <height>421</height>
+        <width>471</width>
+        <height>431</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -124,10 +124,10 @@
      <widget class="QWidget" name="horizontalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>450</x>
-        <y>70</y>
-        <width>341</width>
-        <height>21</height>
+        <x>500</x>
+        <y>80</y>
+        <width>321</width>
+        <height>27</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -142,9 +142,9 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>450</x>
-        <y>50</y>
-        <width>171</width>
+        <x>500</x>
+        <y>60</y>
+        <width>151</width>
         <height>20</height>
        </rect>
       </property>
@@ -155,9 +155,9 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>630</x>
-        <y>50</y>
-        <width>161</width>
+        <x>670</x>
+        <y>60</y>
+        <width>151</width>
         <height>20</height>
        </rect>
       </property>
@@ -168,10 +168,10 @@
      <widget class="QWidget" name="horizontalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>90</y>
+        <x>540</x>
+        <y>110</y>
         <width>239</width>
-        <height>71</height>
+        <height>31</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -383,7 +383,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>

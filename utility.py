@@ -6,14 +6,13 @@ from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
+import matplotlib as mpl
 import sys
 import pandas as pd
 import numpy as np
 import  random
 
 ui,_ = loadUiType('main.ui')
-
 
 class MainApp(QMainWindow,ui):
     
@@ -32,25 +31,28 @@ class MainApp(QMainWindow,ui):
         self.dark_orange_theme()
         self.tabWidget.tabBar().setVisible(False)
         self.plot(type="scatter")
-
+        #self.p = plotting(self)
+        #self.p.plot()
 
     def plot(self,Xdata=None,Ydata=None,type="scatter",x_label="x_label",y_label="y_label"):
-        fig = Figure(figsize=(4, 4), dpi=100)
+        box = dict(facecolor='yellow', pad=5, alpha=0.2)
+        fig = Figure(figsize=(4, 4), dpi=100,tight_layout=True)
         ax1f1 = fig.add_subplot(111)
         if type == "scatter":
-            ax1f1.scatter(Xdata, Ydata)
+            ax1f1.scatter(Xdata, Ydata,c='g')
         elif type =="line":
-            ax1f1.plot(Xdata,Ydata)
+            ax1f1.plot(Xdata,Ydata,c='g')
         else:
             pass
-        ax1f1.set_xlabel(x_label)
-        ax1f1.set_ylabel(y_label)
+        ax1f1.set_xlabel(x_label,bbox=box)
+        ax1f1.set_ylabel(y_label,bbox=box)
         ax1f1.set_title("Plot")
         self.canvas = FigureCanvas(fig)
         self.canvas.setParent(self.mpl_widget)
         self.toolbar = NavigationToolbar(self.canvas,self.mpl_tab, coordinates=True)
         self.canvas.draw()
         self.canvas.show()
+
 
     def initial_Table(self):
         self.tableWidget.setColumnCount(self.col_count)
@@ -109,6 +111,7 @@ class MainApp(QMainWindow,ui):
             xSmooth = np.linspace(xData.min(),xData.max(),300)
             f = interp1d(xData, yData, kind='quadratic')
             ySmooth=f(xSmooth)
+            self.plot(xData, yData, type="scatter", x_label=x_axis, y_label=y_axis)
             self.plot(xSmooth, ySmooth, type="line",x_label=x_axis,y_label=y_axis)
     def FileMenu(self):
         #self.actionQuit.triggered.connect(qApp.quit)
@@ -170,11 +173,15 @@ class MainApp(QMainWindow,ui):
             self.fillComboBox()
             
     def file_save(self):
-        name,_ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.csv *.tsv *.txt)")
-        if name:
-            self.df.to_csv(name,sep=',',index=False)
-            self.isSaved = True
-    
+        if self.tabWidget.currentIndex() == 0:
+            name,_ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.csv *.tsv *.txt)")
+            if name:
+                self.df.to_csv(name,sep=',',index=False)
+                self.isSaved = True
+        elif self.tabWidget.currentIndex() == 1:
+            name, _ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.png)")
+            if name:
+                self.canvas.print_figure(name)
     def closeEvent(self, event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 
@@ -225,7 +232,27 @@ class MainApp(QMainWindow,ui):
         style = open('themes/qdark.css', 'r')
         style = style.read()
         self.setStyleSheet(style)
-        
+
+class plotting(QMainWindow,ui):
+    def __init__(self,MainApp):
+        self.plot()
+    def plot(self, Xdata=None, Ydata=None, type="scatter", x_label="x_label", y_label="y_label"):
+        fig = Figure(figsize=(4, 4), dpi=100)
+        ax1f1 = fig.add_subplot(111)
+        if type == "scatter":
+            ax1f1.scatter(Xdata, Ydata)
+        elif type == "line":
+            ax1f1.plot(Xdata, Ydata)
+        else:
+            pass
+        ax1f1.set_xlabel(x_label)
+        ax1f1.set_ylabel(y_label)
+        ax1f1.set_title("Plot")
+        self.canvas = FigureCanvas(fig)
+        self.canvas.setParent(MainApp.mpl_widget)
+        self.toolbar = NavigationToolbar(self.canvas, self.mpl_tab, coordinates=True)
+        self.canvas.draw()
+        self.canvas.show()
 def main():
 
     app = QApplication(sys.argv)
