@@ -1,16 +1,17 @@
+import sys
+
+import numpy as np
+import pandas as pd
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QTextDocument ,QTextCursor ,QTextCharFormat ,QFont
 from PyQt5.uic import loadUiType
-from scipy.interpolate import interp1d
+from PyQt5.QtPrintSupport import QPrinter ,QPrintDialog,QPrintPreviewDialog
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
-import matplotlib as mpl
-import sys
-import pandas as pd
-import numpy as np
-import  random
+from scipy.interpolate import interp1d
 
 ui,_ = loadUiType('main.ui')
 
@@ -34,19 +35,19 @@ class MainApp(QMainWindow,ui):
         #self.p = plotting(self)
         #self.p.plot()
 
-    def plot(self,Xdata=None,Ydata=None,type="scatter",x_label="x_label",y_label="y_label"):
+    def plot(self,Xdata=None,Ydata=None,type="scatter",x_label="x_label",y_label="y_label",color=None):
         box = dict(facecolor='yellow', pad=5, alpha=0.2)
         fig = Figure(figsize=(4, 4), dpi=100,tight_layout=True)
         ax1f1 = fig.add_subplot(111)
         if type == "scatter":
-            ax1f1.scatter(Xdata, Ydata,c='g')
+            ax1f1.scatter(Xdata, Ydata,c=color)
         elif type =="line":
-            ax1f1.plot(Xdata,Ydata,c='g')
+            ax1f1.plot(Xdata,Ydata,c=color)
         else:
             pass
         ax1f1.set_xlabel(x_label,bbox=box)
         ax1f1.set_ylabel(y_label,bbox=box)
-        ax1f1.set_title("Plot")
+        ax1f1.set_title("Plot ( "+x_label+" V/S "+y_label+" )")
         self.canvas = FigureCanvas(fig)
         self.canvas.setParent(self.mpl_widget)
         self.toolbar = NavigationToolbar(self.canvas,self.mpl_tab, coordinates=True)
@@ -78,6 +79,27 @@ class MainApp(QMainWindow,ui):
     def Show_Plotting(self):
         self.tabWidget.setCurrentIndex(1)
 
+    def plotColorSelecter(self):
+        color = self.comboBox_color.currentText()
+        if(color=="Blue"):
+            return "b"
+        elif (color == "Green"):
+            return "g"
+        elif(color=="Red"):
+            return "r"
+        elif(color=="Yellow"):
+            return "y"
+        elif(color=="Black"):
+            return "k"
+        elif(color=="Magenta"):
+            return "m"
+        elif(color=="Cyan"):
+            return "c"
+        elif(color=="White"):
+            return "w"
+        else:
+            return None
+
     def linePlot(self):
         x_axis = self.comboBox_X.currentText()
         y_axis = self.comboBox_Y.currentText()
@@ -87,7 +109,8 @@ class MainApp(QMainWindow,ui):
         else:
             xData = np.array(self.df[x_axis]).reshape(-1)
             yData = np.array(self.df[y_axis]).reshape(-1)
-            self.plot(xData, yData,type="line",x_label=x_axis,y_label=y_axis)
+            self.plot(xData, yData,type="line",x_label=x_axis,y_label=y_axis,color=self.plotColorSelecter())
+
     def scatterPlot(self):
         x_axis = self.comboBox_X.currentText()
         y_axis = self.comboBox_Y.currentText()
@@ -97,7 +120,7 @@ class MainApp(QMainWindow,ui):
         else:
             xData = np.array(self.df[x_axis]).reshape(-1)
             yData = np.array(self.df[y_axis]).reshape(-1)
-            self.plot(xData,yData,type="scatter",x_label=x_axis,y_label=y_axis)
+            self.plot(xData,yData,type="scatter",x_label=x_axis,y_label=y_axis,color=self.plotColorSelecter())
 
     def smoothCurve(self):
         x_axis = self.comboBox_X.currentText()
@@ -112,13 +135,14 @@ class MainApp(QMainWindow,ui):
             f = interp1d(xData, yData, kind='quadratic')
             ySmooth=f(xSmooth)
             self.plot(xData, yData, type="scatter", x_label=x_axis, y_label=y_axis)
-            self.plot(xSmooth, ySmooth, type="line",x_label=x_axis,y_label=y_axis)
+            self.plot(xSmooth, ySmooth, type="line",x_label=x_axis,y_label=y_axis,color=self.plotColorSelecter())
     def FileMenu(self):
         #self.actionQuit.triggered.connect(qApp.quit)
         self.actionQuit.triggered.connect(self.closeEvent)
         self.actionOpen.triggered.connect(self.openFileDialog)
         self.actionSave.triggered.connect(self.file_save)
-        
+        self.actionPrint.triggered.connect(self.printCsv)
+        self.actionPrint_Preview.triggered.connect(self.handlePreview)
     def EditMenu(self):
         self.actionAdd_Row.triggered.connect(self.AddRow)
         self.actionAdd_Column.triggered.connect(self.AddCol)
@@ -142,6 +166,48 @@ class MainApp(QMainWindow,ui):
     def SetShortcuts(self):
         self.actionOpen.setShortcut("Ctrl+O")
         self.actionQuit.setShortcut("Ctrl+Q")
+
+    def handlePreview(self, printer):
+        dialog = QPrintPreviewDialog()
+        dialog.paintRequested.connect(self.handlePaintRequest)
+        dialog.exec_()
+    def printCsv(self):
+        printer = QPrinter(QPrinter.HighResolution)
+        dialog = QPrintDialog(printer,self)
+        if dialog.exec_() == QPrintDialog.Accepted:
+            self.handlePaintRequest(dialog.printer())
+
+    def handlePaintRequest(self,printer):
+        document = QTextDocument()
+        cursor = QTextCursor(document)
+        table = cursor.insertTable(self.tableWidget.rowCount(), self.tableWidget.columnCount())
+        fm = QTextCharFormat()
+        font = QFont()
+        font.setBold(True)
+        font.setUnderline(True)
+        fm.setFont(font)
+        for i in range(self.tableWidget.columnCount()):
+            col = self.tableWidget.horizontalHeaderItem(i).text()
+            if col is not None:
+                cursor.insertText(col,fm)
+            cursor.movePosition(QTextCursor.NextCell)
+        for row in range(self.tableWidget.rowCount()):
+            for col in range(self.tableWidget.columnCount()):
+                w = self.tableWidget.cellWidget(row, col)
+                it = self.tableWidget.item(row, col)
+                if w is not None:
+                    cursor.insertText(self.get_text_from_widget(w))
+                elif it is not None:
+                    cursor.insertText(it.text())
+                cursor.movePosition(QTextCursor.NextCell)
+
+        document.print_(printer)
+
+    def get_text_from_widget(self,w):
+        t = ""
+        if isinstance(w):
+            t = w.currentText()
+        return t
     def openFileDialog(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open CSV",
                                                   (QDir.homePath() + "/Documents/"), "CSV (*.csv *.tsv *.txt)")
@@ -170,8 +236,10 @@ class MainApp(QMainWindow,ui):
 
             self.tableWidget.resizeColumnsToContents()
             self.tableWidget.resizeRowsToContents()
+            self.comboBox_X.clear()
+            self.comboBox_Y.clear()
             self.fillComboBox()
-            
+
     def file_save(self):
         if self.tabWidget.currentIndex() == 0:
             name,_ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.csv *.tsv *.txt)")
