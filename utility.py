@@ -32,6 +32,7 @@ class MainApp(QMainWindow,ui):
         self.dark_orange_theme()
         self.tabWidget.tabBar().setVisible(False)
         self.plot(type="scatter")
+        self.saveButtonText()
         #self.p = plotting(self)
         #self.p.plot()
 
@@ -39,6 +40,8 @@ class MainApp(QMainWindow,ui):
         box = dict(facecolor='yellow', pad=5, alpha=0.2)
         fig = Figure(figsize=(4, 4), dpi=100,tight_layout=True)
         ax1f1 = fig.add_subplot(111)
+        ax1f1.patch.set_facecolor('black')
+        fig.patch.set_facecolor('black')
         if type == "scatter":
             ax1f1.scatter(Xdata, Ydata,c=color)
         elif type =="line":
@@ -72,12 +75,16 @@ class MainApp(QMainWindow,ui):
         self.pushButton_10.clicked.connect(self.scatterPlot)
         self.pushButton_11.clicked.connect(self.linePlot)
         self.pushButton_12.clicked.connect(self.smoothCurve)
-
+        self.pushButton_13.clicked.connect(self.openFileDialog)
+        self.pushButton_14.clicked.connect(self.printCsv)
+        self.pushButton_15.clicked.connect(self.handlePreview)
     def Show_Home(self):
         self.tabWidget.setCurrentIndex(0)
+        self.saveButtonText()
 
     def Show_Plotting(self):
         self.tabWidget.setCurrentIndex(1)
+        self.saveButtonText()
 
     def plotColorSelecter(self):
         color = self.comboBox_color.currentText()
@@ -143,6 +150,7 @@ class MainApp(QMainWindow,ui):
         self.actionSave.triggered.connect(self.file_save)
         self.actionPrint.triggered.connect(self.printCsv)
         self.actionPrint_Preview.triggered.connect(self.handlePreview)
+        self.actionSave_as_Png.triggered.connect(self.saveAsPng)
     def EditMenu(self):
         self.actionAdd_Row.triggered.connect(self.AddRow)
         self.actionAdd_Column.triggered.connect(self.AddCol)
@@ -240,6 +248,16 @@ class MainApp(QMainWindow,ui):
             self.comboBox_Y.clear()
             self.fillComboBox()
 
+    def saveButtonText(self):
+        if self.tabWidget.currentIndex() == 0:
+            self.pushButton_9.setText("Save Csv File")
+        elif self.tabWidget.currentIndex() == 1:
+            self.pushButton_9.setText("Save Plot \n as png")
+
+    def saveAsPng(self):
+        name, _ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.png)")
+        if name:
+            self.canvas.print_figure(name)
     def file_save(self):
         if self.tabWidget.currentIndex() == 0:
             name,_ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.csv *.tsv *.txt)")
@@ -247,9 +265,7 @@ class MainApp(QMainWindow,ui):
                 self.df.to_csv(name,sep=',',index=False)
                 self.isSaved = True
         elif self.tabWidget.currentIndex() == 1:
-            name, _ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.png)")
-            if name:
-                self.canvas.print_figure(name)
+            self.saveAsPng()
     def closeEvent(self, event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 

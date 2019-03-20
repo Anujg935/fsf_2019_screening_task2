@@ -1,10 +1,10 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource>
-    <file>icons/today.png</file>
-    <file>icons/books.png</file>
+    <file>icons/home.png</file>
+    <file>icons/print.png</file>
     <file>icons/settings.png</file>
     <file>icons/themes.png</file>
-    <file>icons/users.png</file>
+    <file>icons/print_preview.png</file>
   </qresource>
 </RCC>
