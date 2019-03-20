@@ -21,6 +21,7 @@ class MainApp(QMainWindow,ui):
         self.row_count=17
         self.col_count=8
         self.isSaved = False
+        self.isChanged =False
         QMainWindow.__init__(self)
         self.setupUi(self)
         self.initial_Table()
@@ -156,25 +157,68 @@ class MainApp(QMainWindow,ui):
         self.actionAdd_Column.triggered.connect(self.AddCol)
         self.actionRemove_Row.triggered.connect(self.removeRow)
         self.actionRemove_Column.triggered.connect(self.removeCol)
-    
+        self.actionCopy.triggered.connect(self.copy)
+        self.actionPaste.triggered.connect(self.paste)
+        self.actionCut.triggered.connect(self.cut)
+
     def AddRow(self):
         self.row_count += 1     
         self.tableWidget.setRowCount(self.row_count)
+        self.isChanged = True
     
     def AddCol(self):
         self.col_count += 1
         self.tableWidget.setColumnCount(self.col_count)
+        self.isChanged = True
         
     def removeCol(self):
         self.tableWidget.removeColumn(self.tableWidget.currentColumn())
+        self.isChanged = True
         
     def removeRow(self):
-        self.tableWidget.removeRow(self.tableWidget.currentRow()) 
-        
+        self.tableWidget.removeRow(self.tableWidget.currentRow())
+        self.isChanged = True
+
+    def copy(self):
+        if self.tabWidget.currentIndex() == 0:
+            clip = QApplication.clipboard()
+            for content in self.tableWidget.selectedItems():
+                if content.text() is not None:
+                    clip.setText(content.text())
+        else:
+            pass
+    def cut(self):
+        if self.tabWidget.currentIndex() == 0:
+            clip = QApplication.clipboard()
+            for content in self.tableWidget.selectedItems():
+                row = content.row()
+                col = content.column()
+                if content.text() is not None:
+                    clip.setText(content.text())
+                    self.tableWidget.setItem(row, col, QTableWidgetItem(str()))
+            self.isChanged = True
+        else:
+            pass
+
+    def paste(self):
+        if self.tabWidget.currentIndex() == 0:
+            clip = QApplication.clipboard()
+            for content in self.tableWidget.selectedItems():
+                row = content.row()
+                col = content.column()
+                if content.text() is not None:
+                    self.tableWidget.setItem(row, col, QTableWidgetItem(str(clip.text())))
+            self.isChanged = True
+        else:
+            pass
+
     def SetShortcuts(self):
         self.actionOpen.setShortcut("Ctrl+O")
         self.actionQuit.setShortcut("Ctrl+Q")
-
+        self.actionCopy.setShortcut("Ctrl+C")
+        self.actionCut.setShortcut("Ctrl+X")
+        self.actionPaste.setShortcut("Ctrl+V")
+        self.actionPrint.setShortcut("Ctrl+P")
     def handlePreview(self, printer):
         dialog = QPrintPreviewDialog()
         dialog.paintRequested.connect(self.handlePaintRequest)
@@ -232,7 +276,6 @@ class MainApp(QMainWindow,ui):
     def loadCsv(self,fileName):
         if fileName:
             self.df = pd.read_csv(fileName)
-            #print()
             self.row_count = len(self.df.index)
             self.col_count = len(self.df.columns)
             self.tableWidget.setHorizontalHeaderLabels(list(self.df))
@@ -272,7 +315,7 @@ class MainApp(QMainWindow,ui):
         Reimplement the closeEvent() event handler to include a 'Question'
         dialog with options on how to proceed - Save, Close, Cancel buttons
         """
-        if self.isSaved == False:
+        if self.isChanged == True:
             reply = QMessageBox.question(
                 self, "Message",
                 "Are you sure you want to quit? Any unsaved work will be lost.",
