@@ -390,7 +390,11 @@
         <string/>
        </property>
        <property name="text">
-        <string>Plotting</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="icons.qrc">
+         <normaloff>:/icons/plot.png</normaloff>:/icons/plot.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -705,6 +709,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_as_Png"/>
+    <addaction name="actionExport_To_Excel"/>
     <addaction name="actionPrint"/>
     <addaction name="actionPrint_Preview"/>
     <addaction name="separator"/>
@@ -724,8 +729,16 @@
     <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
    </widget>
+   <widget class="QMenu" name="menuTabs">
+    <property name="title">
+     <string>Tabs</string>
+    </property>
+    <addaction name="actionHome"/>
+    <addaction name="actionPlotting"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuTabs"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -795,6 +808,21 @@
   <action name="actionCut">
    <property name="text">
     <string>Cut</string>
+   </property>
+  </action>
+  <action name="actionExport_To_Excel">
+   <property name="text">
+    <string>Export To Excel</string>
+   </property>
+  </action>
+  <action name="actionHome">
+   <property name="text">
+    <string>Home</string>
+   </property>
+  </action>
+  <action name="actionPlotting">
+   <property name="text">
+    <string>Plotting</string>
    </property>
   </action>
  </widget>

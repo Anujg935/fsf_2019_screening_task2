@@ -27,22 +27,20 @@ class MainApp(QMainWindow,ui):
         self.initial_Table()
         self.FileMenu()
         self.EditMenu()
+        self.TabsMenu()
         self.SetShortcuts()
         self.Hiding_Themes()
         self.Handel_Buttons()
+        self.setButtonToolTip()
         self.dark_orange_theme()
         self.tabWidget.tabBar().setVisible(False)
         self.plot(type="scatter")
         self.saveButtonText()
-        #self.p = plotting(self)
-        #self.p.plot()
 
     def plot(self,Xdata=None,Ydata=None,type="scatter",x_label="x_label",y_label="y_label",color=None):
         box = dict(facecolor='yellow', pad=5, alpha=0.2)
         fig = Figure(figsize=(4, 4), dpi=100,tight_layout=True)
         ax1f1 = fig.add_subplot(111)
-        ax1f1.patch.set_facecolor('black')
-        fig.patch.set_facecolor('black')
         if type == "scatter":
             ax1f1.scatter(Xdata, Ydata,c=color)
         elif type =="line":
@@ -79,6 +77,14 @@ class MainApp(QMainWindow,ui):
         self.pushButton_13.clicked.connect(self.openFileDialog)
         self.pushButton_14.clicked.connect(self.printCsv)
         self.pushButton_15.clicked.connect(self.handlePreview)
+
+    def setButtonToolTip(self):
+        self.pushButton.setToolTip("Change Theme")
+        self.pushButton_7.setToolTip("Home View CSV ")
+        self.pushButton_8.setToolTip("Plot Data")
+        self.pushButton_14.setToolTip("Print CSV")
+        self.pushButton_15.setToolTip("Print Preview")
+        self.pushButton_13.setToolTip("Open CSV File")
     def Show_Home(self):
         self.tabWidget.setCurrentIndex(0)
         self.saveButtonText()
@@ -142,16 +148,17 @@ class MainApp(QMainWindow,ui):
             xSmooth = np.linspace(xData.min(),xData.max(),300)
             f = interp1d(xData, yData, kind='quadratic')
             ySmooth=f(xSmooth)
-            self.plot(xData, yData, type="scatter", x_label=x_axis, y_label=y_axis)
-            self.plot(xSmooth, ySmooth, type="line",x_label=x_axis,y_label=y_axis,color=self.plotColorSelecter())
+            self.plot(xSmooth, ySmooth, type="scatter",x_label=x_axis,y_label=y_axis,color=self.plotColorSelecter())
+
     def FileMenu(self):
-        #self.actionQuit.triggered.connect(qApp.quit)
         self.actionQuit.triggered.connect(self.closeEvent)
         self.actionOpen.triggered.connect(self.openFileDialog)
         self.actionSave.triggered.connect(self.file_save)
         self.actionPrint.triggered.connect(self.printCsv)
         self.actionPrint_Preview.triggered.connect(self.handlePreview)
         self.actionSave_as_Png.triggered.connect(self.saveAsPng)
+        self.actionExport_To_Excel.triggered.connect(self.writeXlsx)
+
     def EditMenu(self):
         self.actionAdd_Row.triggered.connect(self.AddRow)
         self.actionAdd_Column.triggered.connect(self.AddCol)
@@ -160,6 +167,10 @@ class MainApp(QMainWindow,ui):
         self.actionCopy.triggered.connect(self.copy)
         self.actionPaste.triggered.connect(self.paste)
         self.actionCut.triggered.connect(self.cut)
+
+    def TabsMenu(self):
+        self.actionHome.triggered.connect(self.Show_Home)
+        self.actionPlotting.triggered.connect(self.Show_Plotting)
 
     def AddRow(self):
         self.row_count += 1     
@@ -187,6 +198,7 @@ class MainApp(QMainWindow,ui):
                     clip.setText(content.text())
         else:
             pass
+
     def cut(self):
         if self.tabWidget.currentIndex() == 0:
             clip = QApplication.clipboard()
@@ -219,10 +231,12 @@ class MainApp(QMainWindow,ui):
         self.actionCut.setShortcut("Ctrl+X")
         self.actionPaste.setShortcut("Ctrl+V")
         self.actionPrint.setShortcut("Ctrl+P")
+
     def handlePreview(self, printer):
         dialog = QPrintPreviewDialog()
         dialog.paintRequested.connect(self.handlePaintRequest)
         dialog.exec_()
+
     def printCsv(self):
         printer = QPrinter(QPrinter.HighResolution)
         dialog = QPrintDialog(printer,self)
@@ -260,6 +274,14 @@ class MainApp(QMainWindow,ui):
         if isinstance(w):
             t = w.currentText()
         return t
+
+    def writeXlsx(self):
+        fileName, _ = QFileDialog.getSaveFileName(self, "Save Xlsx",
+                                                  (QDir.homePath() + "/Documents/"), "Excel (*.xlsx)")
+        writer = pd.ExcelWriter(fileName, engine='xlsxwriter')
+        self.df.to_excel(writer, sheet_name='Sheet1',index=False)
+        writer.save()
+
     def openFileDialog(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open CSV",
                                                   (QDir.homePath() + "/Documents/"), "CSV (*.csv *.tsv *.txt)")
@@ -273,6 +295,7 @@ class MainApp(QMainWindow,ui):
 
         self.comboBox_X.insertItems(0,col)
         self.comboBox_Y.insertItems(0,col)
+
     def loadCsv(self,fileName):
         if fileName:
             self.df = pd.read_csv(fileName)
@@ -294,13 +317,16 @@ class MainApp(QMainWindow,ui):
     def saveButtonText(self):
         if self.tabWidget.currentIndex() == 0:
             self.pushButton_9.setText("Save Csv File")
+            self.pushButton_9.setToolTip("Save CSV File")
         elif self.tabWidget.currentIndex() == 1:
             self.pushButton_9.setText("Save Plot \n as png")
+            self.pushButton_9.setToolTip("Save Graph Plot")
 
     def saveAsPng(self):
         name, _ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.png)")
         if name:
             self.canvas.print_figure(name)
+
     def file_save(self):
         if self.tabWidget.currentIndex() == 0:
             name,_ = QFileDialog.getSaveFileName(self, "Save file", (QDir.homePath() + "/Documents/"), "(*.csv *.tsv *.txt)")
@@ -309,6 +335,7 @@ class MainApp(QMainWindow,ui):
                 self.isSaved = True
         elif self.tabWidget.currentIndex() == 1:
             self.saveAsPng()
+
     def closeEvent(self, event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 

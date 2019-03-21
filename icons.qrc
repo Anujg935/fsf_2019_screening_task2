@@ -6,5 +6,6 @@
     <file>icons/settings.png</file>
     <file>icons/themes.png</file>
     <file>icons/print_preview.png</file>
+	<file>icons/plot.png</file>
   </qresource>
 </RCC>
