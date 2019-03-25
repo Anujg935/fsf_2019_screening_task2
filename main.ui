@@ -10,6 +10,18 @@
     <height>634</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>947</width>
+    <height>634</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -143,7 +155,7 @@
       <property name="geometry">
        <rect>
         <x>520</x>
-        <y>140</y>
+        <y>170</y>
         <width>271</width>
         <height>31</height>
        </rect>
@@ -243,6 +255,41 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_5">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>140</y>
+        <width>271</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Rows From</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_X_2"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>To</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_X_3"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
@@ -287,8 +334,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>70</width>
+         <height>70</height>
         </size>
        </property>
       </widget>
@@ -317,12 +364,16 @@
         <string/>
        </property>
        <property name="text">
-        <string>Load</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="icons.qrc">
+         <normaloff>:/icons/load.png</normaloff>:/icons/load.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>70</width>
+         <height>70</height>
         </size>
        </property>
       </widget>
@@ -398,8 +449,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>70</width>
+         <height>70</height>
         </size>
        </property>
       </widget>
@@ -436,8 +487,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>70</width>
+         <height>70</height>
         </size>
        </property>
       </widget>
@@ -474,8 +525,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>70</width>
+         <height>70</height>
         </size>
        </property>
       </widget>
@@ -512,8 +563,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>70</width>
+         <height>70</height>
         </size>
        </property>
       </widget>
@@ -607,8 +658,11 @@
             <height>75</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>Push Button</string>
           </property>
          </widget>
         </item>
@@ -632,8 +686,11 @@
             <height>75</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(50, 50, 50);</string>
+          </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>Dark Gray</string>
           </property>
          </widget>
         </item>
@@ -657,8 +714,11 @@
             <height>75</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(5, 50, 118);</string>
+          </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>Dark Blue</string>
           </property>
          </widget>
         </item>
@@ -682,8 +742,11 @@
             <height>75</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(50, 50, 50);</string>
+          </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>Dark Orange</string>
           </property>
          </widget>
         </item>
@@ -719,6 +782,8 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionEdit"/>
+    <addaction name="separator"/>
     <addaction name="actionAdd_Row"/>
     <addaction name="actionAdd_Column"/>
     <addaction name="separator"/>
@@ -728,6 +793,8 @@
     <addaction name="actionCopy"/>
     <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
+    <addaction name="separator"/>
+    <addaction name="actionRetain_Selected_Row_Columns"/>
    </widget>
    <widget class="QMenu" name="menuTabs">
     <property name="title">
@@ -736,9 +803,16 @@
     <addaction name="actionHome"/>
     <addaction name="actionPlotting"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionChange_Theme"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuTabs"/>
+   <addaction name="menuSettings"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -823,6 +897,21 @@
   <action name="actionPlotting">
    <property name="text">
     <string>Plotting</string>
+   </property>
+  </action>
+  <action name="actionRetain_Selected_Row_Columns">
+   <property name="text">
+    <string>Retain Selected Row Columns</string>
+   </property>
+  </action>
+  <action name="actionEdit">
+   <property name="text">
+    <string>Edit</string>
+   </property>
+  </action>
+  <action name="actionChange_Theme">
+   <property name="text">
+    <string>Change Theme</string>
    </property>
   </action>
  </widget>
