@@ -25,10 +25,14 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/logo.png</normaloff>:/icons/logo.png</iconset>
+  </property>
   <property name="iconSize">
    <size>
-    <width>60</width>
-    <height>60</height>
+    <width>100</width>
+    <height>100</height>
    </size>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -658,11 +662,20 @@
             <height>75</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">background-color: rgb(240, 240, 240);
+color: rgb(0, 0, 0);</string>
           </property>
           <property name="text">
-           <string>Push Button</string>
+           <string>Light 
+Theme</string>
           </property>
          </widget>
         </item>
@@ -686,11 +699,20 @@
             <height>75</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(50, 50, 50);</string>
+           <string notr="true">background-color: rgb(50, 50, 50);
+color: rgb(255, 255, 255);</string>
           </property>
           <property name="text">
-           <string>Dark Gray</string>
+           <string>Dark 
+Gray</string>
           </property>
          </widget>
         </item>
@@ -714,11 +736,20 @@
             <height>75</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(5, 50, 118);</string>
+           <string notr="true">background-color: rgb(5, 50, 118);
+color: rgb(170, 255, 255);</string>
           </property>
           <property name="text">
-           <string>Dark Blue</string>
+           <string>Dark 
+Blue</string>
           </property>
          </widget>
         </item>
@@ -742,11 +773,21 @@
             <height>75</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+            <underline>false</underline>
+           </font>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(50, 50, 50);</string>
+           <string notr="true">background-color: rgb(50, 50, 50);
+color: rgb(255, 85, 0);</string>
           </property>
           <property name="text">
-           <string>Dark Orange</string>
+           <string>Dark 
+Orange</string>
           </property>
          </widget>
         </item>
@@ -809,14 +850,21 @@
     </property>
     <addaction name="actionChange_Theme"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuTabs"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>Load</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -912,6 +960,11 @@
   <action name="actionChange_Theme">
    <property name="text">
     <string>Change Theme</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>
