@@ -57,3 +57,8 @@ A PyQt Based application for edditing csv files and plotting graphs.
       [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/darkGray.PNG?raw=true)]()
       #### ->Light Theme:-
       [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/LightTheme.PNG?raw=true)]()
+      
+      
+      
+## Note:-
+If you have any suggestions or issues in this project,then please contact me or report it .It will be hightly appretiated. 
