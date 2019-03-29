@@ -1,7 +1,23 @@
-# fsf_2019_screening_task2
+# Csv Utility
 <img src="https://fossee.in/sites/all/themes/software_responsive_theme/img/logo.png" alt="Fossee">
 
 A PyQt Based application for edditing csv files and plotting graphs.
+
+## Requirements :-
+First, download this repository using `git clone https://github.com/Anujg935/fsf_2019_screening_task2.git`
+Now install the following required packags in the system:-
+1) Python 3.6
+2) Matplotlib
+3) PyQt5
+4) Numpy
+5) pandas
+6) Scipy
+
+## Run :-
+Run this application by following instructions:-
+ 1) First `cd` into the clonned github folder
+ 2) Then execute the python file `utility.py` using `python utility.py`
+ 3) Required application should run
 
 ## Main GUI App
 [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/software.png?raw=true)]()
