@@ -20,4 +20,6 @@ A PyQt Based application for edditing csv files and plotting graphs.
             - Scatter Plot
             - Line Plot
             - Smooth Cure plot
-    
+            
+      #### Explained Plot tab :-
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/plotExplained.png?raw=true)]()
