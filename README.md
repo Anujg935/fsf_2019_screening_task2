@@ -1,5 +1,5 @@
 # fsf_2019_screening_task2
-<a href="https://python.fossee.in/fellowship2019/"><img src="https://scilab.in/sites/default/files/fossee-logo.png" title="Fossse screening test" alt="Fossee"></a>
+<img src="https://fossee.in/sites/all/themes/software_responsive_theme/img/logo.png" alt="Fossee">
 
 A PyQt Based application for edditing csv files and plotting graphs.
 
