@@ -31,3 +31,11 @@ A PyQt Based application for edditing csv files and plotting graphs.
        [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/line_plot.PNG?raw=true)]()
        ##### Smooth Plot:-
        [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/smooth_plot.PNG?raw=true)]()
+
+  - # Csv Features
+      #### Export to Excel File
+      #### Cut, Copy and Paste
+      #### Add New Row and Column
+      #### Remove Selected Row And Columns
+      #### "Edit" Option under Edit Menu is to be pressed after editing of loaded Csv File
+      ####  Print and Print Preview 
