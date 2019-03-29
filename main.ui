@@ -835,7 +835,6 @@ Orange</string>
     <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
-    <addaction name="actionRetain_Selected_Row_Columns"/>
    </widget>
    <widget class="QMenu" name="menuTabs">
     <property name="title">
