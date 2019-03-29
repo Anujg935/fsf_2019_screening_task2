@@ -33,9 +33,26 @@ A PyQt Based application for edditing csv files and plotting graphs.
        [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/smooth_plot.PNG?raw=true)]()
 
   - # Csv Features
-      #### Export to Excel File
-      #### Cut, Copy and Paste
-      #### Add New Row and Column
-      #### Remove Selected Row And Columns
-      #### "Edit" Option under Edit Menu is to be pressed after editing of loaded Csv File
-      ####  Print and Print Preview 
+      #### ->Export to Excel File
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/excel.png?raw=true)]()
+      #### ->Cut, Copy and Paste
+      #### ->Add New Row and Column
+      #### ->Remove Selected Row And Columns
+      #### ->"Edit" Option under Edit Menu is to be pressed after editing of loaded Csv File
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/edit.png?raw=true)]()
+      #### ->Print and Print Preview 
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/print.PNG?raw=true)]()
+      
+      
+  - # General Features
+      #### -> Change of theme
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/changeTheme.PNG?raw=true)]()
+
+  - # Available Themes
+      #### ->Dark Orange Theme:-
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/darkOrange.PNG?raw=true)]()
+      #### ->Dark Blue Theme:-
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/darkBlue.PNG?raw=true)]()
+      #### ->Dark Gray Theme:-
+      [![GRAPHIC HERE](https://github.com/Anujg935/fsf_2019_screening_task2/blob/master/examples/darkGray.PNG?raw=true)]()
+      #### ->Light Theme:-
